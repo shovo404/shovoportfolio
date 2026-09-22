@@ -47,7 +47,7 @@ export default function Hero() {
   const activeImage = heroImages[activeImageIndex];
 
   return (
-    <section id="hero" className="relative overflow-hidden pt-10 lg:pt-16">
+    <section id="hero" className="relative overflow-hidden pt-8 lg:pt-10">
       <FloatingParticles />
       <div className="hero-bg-glow" aria-hidden="true" />
       <div className="container relative z-10">
@@ -58,7 +58,7 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: 'easeOut' }}
           >
-            <div className="mb-6 inline-flex items-center gap-3 rounded-full border border-cyan-400/15 bg-white/5 px-4 py-2 text-sm text-slate-200 shadow-lg shadow-cyan-500/10">
+            <div className="mb-4 inline-flex items-center gap-3 rounded-full border border-cyan-400/15 bg-white/5 px-4 py-2 text-sm text-slate-200 shadow-lg shadow-cyan-500/10">
               <span className="relative flex h-2.5 w-2.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan-400 opacity-75" />
                 <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-cyan-300" />
@@ -66,30 +66,30 @@ export default function Hero() {
               {hero?.badge || 'Available for work'}
             </div>
 
-            <p className="mb-4 text-sm uppercase tracking-[0.35em] text-cyan-200/80">{hero?.eyebrow}</p>
-            <h1 className="max-w-4xl text-5xl font-semibold leading-[1.03] tracking-[-0.05em] text-white md:text-7xl">
+            <p className="mb-3 text-sm uppercase tracking-[0.35em] text-cyan-200/80">{hero?.eyebrow}</p>
+            <h1 className="max-w-4xl text-4xl font-semibold leading-[1.05] tracking-[-0.05em] text-white md:text-6xl">
               {hero?.headingPre}
               {hero?.headingHighlight ? <span className="text-gradient"> {hero.headingHighlight}</span> : null}
               {hero?.headingPost ? <span> {hero.headingPost}</span> : null}
             </h1>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
+            <p className="mt-5 max-w-2xl text-base leading-7 text-slate-300 md:text-lg md:leading-8">
               {profile?.bio}
             </p>
 
-            <div className="mt-6 flex flex-wrap items-center gap-3 text-base text-slate-300 md:text-lg">
+            <div className="mt-4 flex flex-wrap items-center gap-3 text-sm text-slate-300 md:text-base">
               <span className="text-slate-400">{hero?.focusedLabel || 'Currently focused on'}</span>
               <span className="rounded-full border border-cyan-400/20 bg-white/5 px-4 py-2 text-cyan-100 shadow-lg shadow-cyan-500/10">
                 {typed || highlights[0]}
               </span>
             </div>
 
-            <div className="mt-7 flex flex-wrap items-center gap-3 text-sm text-slate-300">
+            <div className="mt-5 flex flex-wrap items-center gap-3 text-sm text-slate-300">
               <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">{profile?.title}</span>
               <span className="rounded-full border border-white/10 bg-white/5 px-4 py-2">{profile?.availability}</span>
             </div>
 
-            <div className="mt-8 flex flex-wrap gap-4">
+            <div className="mt-6 flex flex-wrap gap-4">
               <a href="#contact" className="neon-button">
                 Hire Me <FiArrowRight />
               </a>
@@ -101,20 +101,20 @@ export default function Hero() {
               </button>
             </div>
 
-            <div className="mt-8 flex items-center gap-4">
-              <a href="#contact" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/40 hover:text-white">
+            <div className="mt-6 flex items-center gap-4">
+              <a href="#contact" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/40 hover:text-white">
                 <FiMail />
               </a>
-              <a href="#contact" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/40 hover:text-white">
+              <a href="#contact" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/40 hover:text-white">
                 <FaGithub />
               </a>
-              <a href="#contact" className="flex h-12 w-12 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/40 hover:text-white">
+              <a href="#contact" className="flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 transition hover:border-cyan-400/40 hover:text-white">
                 <FaLinkedinIn />
               </a>
             </div>
 
             <motion.div
-              className="hero-mobile-gallery glass card-hover mt-10 overflow-hidden rounded-[30px] border border-white/10 lg:hidden"
+              className="hero-mobile-gallery glass card-hover mt-8 overflow-hidden rounded-[30px] border border-white/10 lg:hidden"
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: 'easeOut', delay: 0.08 }}
@@ -150,6 +150,12 @@ export default function Hero() {
         >
           <TiltCard maxTilt={10} global>
             <div className="float-3d">
+              <span className="orbit-ring r1" aria-hidden="true" />
+              <span className="orbit-ring r2" aria-hidden="true" />
+              <span className="orbit-ring r3" aria-hidden="true" />
+              <span className="fx-cube c1" aria-hidden="true" />
+              <span className="fx-cube c2" aria-hidden="true" />
+              <span className="fx-cube c3" aria-hidden="true" />
               <div className="hero-visual-card glass card-hover overflow-hidden rounded-[36px] border border-white/10">
                 <div className="hero-visual-mask">
               <motion.img
@@ -177,10 +183,10 @@ export default function Hero() {
           </TiltCard>
         </motion.div>
 
-        <div className="mt-10 grid gap-4 rounded-[28px] border border-white/10 bg-white/5 p-5 md:grid-cols-4">
+        <div className="mt-8 grid gap-4 rounded-[28px] border border-white/10 bg-white/5 p-4 md:grid-cols-4">
           {(hero?.quickTags || []).map((item) => (
             <TiltCard key={item} maxTilt={9} className="h-full">
-              <div className="rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-4 text-sm text-slate-300">
+              <div className="rounded-2xl border border-white/10 bg-slate-950/50 px-4 py-3 text-sm text-slate-300">
                 {item}
               </div>
             </TiltCard>
