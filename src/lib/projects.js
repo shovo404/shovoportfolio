@@ -1,4 +1,4 @@
-import { supabase } from './supabase';
+import { STORAGE_BUCKET, supabase } from './supabase';
 
 export async function fetchProjects() {
   if (!supabase) return null;
@@ -57,12 +57,12 @@ export async function uploadProjectImage(file, oldPath) {
   const path = `projects/${Date.now()}-${Math.random().toString(36).slice(2)}.${extension}`;
 
   const { error: uploadError } = await supabase.storage
-    .from('project-images')
+    .from(STORAGE_BUCKET)
     .upload(path, file, { cacheControl: '3600', upsert: false });
 
   if (uploadError) throw uploadError;
 
-  const { data } = supabase.storage.from('project-images').getPublicUrl(path);
+  const { data } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(path);
 
   if (oldPath) {
     await removeProjectImage(oldPath);
@@ -74,9 +74,9 @@ export async function uploadProjectImage(file, oldPath) {
 export async function removeProjectImage(publicUrl) {
   if (!supabase || !publicUrl) return;
 
-  const bucketBase = `${supabase.storage.from('project-images').getPublicUrl('x').data.publicUrl.replace(/x$/, '')}`;
+  const bucketBase = `${supabase.storage.from(STORAGE_BUCKET).getPublicUrl('x').data.publicUrl.replace(/x$/, '')}`;
   const fileName = publicUrl.replace(bucketBase, '');
   if (!fileName || fileName === publicUrl) return;
 
-  await supabase.storage.from('project-images').remove([fileName]);
+  await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
 }

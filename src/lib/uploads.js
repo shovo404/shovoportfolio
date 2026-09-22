@@ -1,6 +1,4 @@
-import { supabase } from './supabase';
-
-const STORAGE_BUCKET = 'project-images';
+import { STORAGE_BUCKET, supabase } from './supabase';
 
 export async function uploadImage(file, folder = 'hero') {
   if (!supabase) throw new Error('Supabase is not configured.');
