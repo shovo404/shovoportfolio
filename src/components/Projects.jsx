@@ -5,6 +5,7 @@ import SectionHeading from './SectionHeading';
 import { DEFAULT_CONTENT } from '../data/defaults';
 import { fetchProjects } from '../lib/projects';
 import { isSupabaseConfigured } from '../lib/supabase';
+import { useContent } from '../context/ContentContext';
 import TiltCard from './TiltCard';
 
 const PLACEHOLDER_GRADIENTS = [
