@@ -10,7 +10,7 @@ export default function Experience() {
   const memberships = content?.memberships || [];
 
   return (
-    <section id="experience" className="section">
+    <section id="experience" className="section pt-2 lg:pt-4">
       <div className="container">
         <SectionHeading
           eyebrow="Experience"

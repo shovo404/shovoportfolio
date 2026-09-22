@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import AnimatedCounters from './components/AnimatedCounters';
+import JobExperience from './components/JobExperience';
 import About from './components/About';
 import Skills from './components/Skills';
 import EducationTimeline from './components/EducationTimeline';
@@ -52,12 +53,13 @@ function PortfolioPage() {
       <main>
         <Hero />
         <AnimatedCounters />
+        <JobExperience />
+        <Experience />
         <About />
         <Skills />
         <EducationTimeline />
         <Research />
         <Projects />
-        <Experience />
         <Contact />
       </main>
 

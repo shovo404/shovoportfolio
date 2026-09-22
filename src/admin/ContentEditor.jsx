@@ -11,6 +11,7 @@ import { Button, Field, TextArea, TextInput } from './ui';
 const TABS = [
   'Profile',
   'Hero',
+  'Job Experience',
   'About',
   'Skills',
   'Education',
@@ -512,6 +513,73 @@ export default function ContentEditor() {
               images={content.hero.heroImages}
               onChange={(images) => update((c) => { c.hero.heroImages = images; })}
             />
+          </div>
+        );
+
+      case 'Job Experience':
+        return (
+          <div className="flex flex-col gap-5">
+            <Field label="Section eyebrow">
+              <TextInput
+                value={content.jobExperienceSection.eyebrow}
+                onChange={(e) => update((c) => { c.jobExperienceSection.eyebrow = e.target.value; })}
+              />
+            </Field>
+            <Field label="Section heading">
+              <TextInput
+                value={content.jobExperienceSection.title}
+                onChange={(e) => update((c) => { c.jobExperienceSection.title = e.target.value; })}
+              />
+            </Field>
+            <Field label="Section subtitle">
+              <TextArea
+                value={content.jobExperienceSection.subtitle}
+                onChange={(e) => update((c) => { c.jobExperienceSection.subtitle = e.target.value; })}
+              />
+            </Field>
+
+            <div className="border-t border-white/10 pt-5">
+              {content.jobExperience.map((item, index) => (
+                <CardEditor
+                  key={index}
+                  label={`Job ${index + 1}`}
+                  onRemove={() => update((c) => { c.jobExperience.splice(index, 1); })}
+                >
+                  <TextInput
+                    value={item.role}
+                    placeholder="Role"
+                    onChange={(e) => update((c) => { c.jobExperience[index].role = e.target.value; })}
+                  />
+                  <TextInput
+                    value={item.company}
+                    placeholder="Company / organization"
+                    onChange={(e) => update((c) => { c.jobExperience[index].company = e.target.value; })}
+                  />
+                  <TextInput
+                    value={item.timeline}
+                    placeholder="Timeline (e.g. 2024 - Present)"
+                    onChange={(e) => update((c) => { c.jobExperience[index].timeline = e.target.value; })}
+                  />
+                  <TextInput
+                    value={item.location}
+                    placeholder="Location (e.g. Remote · Bangladesh)"
+                    onChange={(e) => update((c) => { c.jobExperience[index].location = e.target.value; })}
+                  />
+                  <LinesEditor
+                    label="Highlights (one per line)"
+                    lines={item.highlights || []}
+                    onChange={(lines) => update((c) => { c.jobExperience[index].highlights = lines; })}
+                  />
+                </CardEditor>
+              ))}
+              <Button
+                type="button"
+                variant="secondary"
+                onClick={() => update((c) => { c.jobExperience.push({ role: '', company: '', timeline: '', location: '', highlights: [] }); })}
+              >
+                <FiPlus /> Add job
+              </Button>
+            </div>
           </div>
         );
 

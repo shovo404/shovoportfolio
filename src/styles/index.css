@@ -231,6 +231,95 @@ textarea {
   }
 }
 
+/* ---- Job Experience timeline ---- */
+.job-timeline-line {
+  position: absolute;
+  left: 27px;
+  top: 12px;
+  bottom: 12px;
+  width: 2px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.6), rgba(124, 58, 237, 0.5), rgba(34, 211, 238, 0.12));
+  box-shadow: 0 0 16px rgba(34, 211, 238, 0.35);
+}
+
+.job-marker {
+  position: absolute;
+  left: 0;
+  top: 22px;
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  background: linear-gradient(135deg, #22d3ee, #8b5cf6);
+  box-shadow:
+    0 0 0 5px rgba(34, 211, 238, 0.14),
+    0 0 24px rgba(34, 211, 238, 0.4);
+}
+
+.job-marker::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 999px;
+  border: 1px solid rgba(34, 211, 238, 0.35);
+  animation: job-pulse 2.6s ease-out infinite;
+}
+
+@keyframes job-pulse {
+  0% { transform: scale(0.9); opacity: 0.9; }
+  70%, 100% { transform: scale(1.45); opacity: 0; }
+}
+
+.job-card {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 24px 55px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(34, 211, 238, 0.07);
+}
+
+.job-card::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 3px;
+  background: linear-gradient(90deg, #22d3ee, #8b5cf6, #22d3ee);
+  background-size: 200% 100%;
+  animation: job-slide 6s linear infinite;
+}
+
+@keyframes job-slide {
+  0% { background-position: 0% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.job-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #a5f3fc;
+  background: rgba(8, 145, 178, 0.12);
+  border: 1px solid rgba(34, 211, 238, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .job-marker::after,
+  .job-card::before {
+    animation: none;
+  }
+}
+
 .admin-card {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   backdrop-filter: blur(24px);

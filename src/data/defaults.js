@@ -178,6 +178,46 @@ export const DEFAULT_CONTENT = {
     subtitle: 'Each project card includes the full presentation stack: thumbnail, description, tech stack, and action buttons.',
   },
 
+  jobExperienceSection: {
+    eyebrow: 'Job Experience',
+    title: 'Roles that shaped the craft.',
+    subtitle: 'From freelance automation to research-driven development — a live look at the roles behind the work.',
+  },
+
+  jobExperience: [
+    {
+      role: 'AI & Web Automation Freelancer',
+      company: 'Independent / Remote',
+      timeline: '2024 - Present',
+      location: 'Remote · Bangladesh',
+      highlights: [
+        'Automates repetitive client workflows with Python scripts and custom tooling.',
+        'Ships AI-assisted dashboards and web interfaces tailored to business needs.',
+        'Pairs practical AI features with clean, fast, and reliable frontend systems.',
+      ],
+    },
+    {
+      role: 'Student Associate',
+      company: 'Creative International (Daffodil Group)',
+      timeline: '2023 - Present',
+      location: 'Dhaka, Bangladesh',
+      highlights: [
+        'Contributes to structured learning tracks, collaboration, and professional exposure.',
+        'Works with product-facing teams on technology-driven ideas and deliverables.',
+      ],
+    },
+    {
+      role: 'Browser Extension Developer',
+      company: 'Independent Projects',
+      timeline: '2024 - Present',
+      location: 'Remote',
+      highlights: [
+        'Designs productivity-focused Chrome extensions with clean interactions.',
+        'Builds extension features that automate everyday workflows end-to-end.',
+      ],
+    },
+  ],
+
   experience: [
     {
       role: 'Student Associate',
