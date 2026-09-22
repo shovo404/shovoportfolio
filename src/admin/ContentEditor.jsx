@@ -555,16 +555,39 @@ export default function ContentEditor() {
                     placeholder="Company / organization"
                     onChange={(e) => update((c) => { c.jobExperience[index].company = e.target.value; })}
                   />
-                  <TextInput
-                    value={item.timeline}
-                    placeholder="Timeline (e.g. 2024 - Present)"
-                    onChange={(e) => update((c) => { c.jobExperience[index].timeline = e.target.value; })}
-                  />
-                  <TextInput
-                    value={item.location}
-                    placeholder="Location (e.g. Remote · Bangladesh)"
-                    onChange={(e) => update((c) => { c.jobExperience[index].location = e.target.value; })}
-                  />
+                  <div className="grid gap-3 sm:grid-cols-2">
+                    <Field label="From (start date)" hint="e.g. 12 March 2024">
+                      <TextInput
+                        value={item.startDate || ''}
+                        placeholder="From"
+                        onChange={(e) => update((c) => { c.jobExperience[index].startDate = e.target.value; })}
+                      />
+                    </Field>
+                    <Field label="To (end date)" hint="e.g. 5 June 2025">
+                      <TextInput
+                        value={item.current ? '' : (item.endDate || '')}
+                        placeholder={item.current ? 'Present' : 'To'}
+                        disabled={item.current}
+                        onChange={(e) => update((c) => { c.jobExperience[index].endDate = e.target.value; })}
+                      />
+                    </Field>
+                  </div>
+                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                    <input
+                      type="checkbox"
+                      className="h-4 w-4 rounded accent-emerald-400"
+                      checked={Boolean(item.current)}
+                      onChange={(e) => update((c) => { c.jobExperience[index].current = e.target.checked; })}
+                    />
+                    <span className="text-sm text-slate-200">I am currently working here</span>
+                  </label>
+                  <Field label="Location">
+                    <TextInput
+                      value={item.location}
+                      placeholder="Location (e.g. Remote · Bangladesh)"
+                      onChange={(e) => update((c) => { c.jobExperience[index].location = e.target.value; })}
+                    />
+                  </Field>
                   <LinesEditor
                     label="Highlights (one per line)"
                     lines={item.highlights || []}
@@ -575,7 +598,7 @@ export default function ContentEditor() {
               <Button
                 type="button"
                 variant="secondary"
-                onClick={() => update((c) => { c.jobExperience.push({ role: '', company: '', timeline: '', location: '', highlights: [] }); })}
+                onClick={() => update((c) => { c.jobExperience.push({ role: '', company: '', startDate: '', endDate: '', current: false, location: '', highlights: [] }); })}
               >
                 <FiPlus /> Add job
               </Button>

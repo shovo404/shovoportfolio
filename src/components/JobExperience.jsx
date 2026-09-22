@@ -4,10 +4,44 @@ import SectionHeading from './SectionHeading';
 import { useContent } from '../context/ContentContext';
 import TiltCard from './TiltCard';
 
+const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+
+function dateValue(value) {
+  if (!value) return 0;
+
+  const parsed = new Date(value.trim());
+  if (!Number.isNaN(parsed.getTime())) return parsed.getTime();
+
+  const year = Number((value.match(/(\d{4})/) || [])[1] || 0);
+  const monthToken = (value.match(/jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec/i) || [])[0];
+  const month = monthToken ? MONTHS.indexOf(monthToken.toLowerCase()) : 0;
+  if (!year) return 0;
+
+  return new Date(year, month, 1).getTime();
+}
+
+function sortJobs(jobs) {
+  const endValue = (job) => (job.current ? Number.POSITIVE_INFINITY : dateValue(job.endDate));
+
+  return [...jobs].sort((a, b) => {
+    const endDiff = endValue(b) - endValue(a);
+    if (endDiff !== 0) return endDiff;
+    return dateValue(b.startDate) - dateValue(a.startDate);
+  });
+}
+
+function formatRange(job) {
+  if (job.current) return `${job.startDate || '—'} — Present`;
+  if (job.startDate && job.endDate) return `${job.startDate} — ${job.endDate}`;
+  if (job.startDate) return job.startDate;
+  if (job.endDate) return job.endDate;
+  return job.timeline || '';
+}
+
 export default function JobExperience() {
   const content = useContent();
   const section = content?.jobExperienceSection || {};
-  const jobs = content?.jobExperience || [];
+  const jobs = sortJobs(content?.jobExperience || []);
 
   if (jobs.length === 0) return null;
 
@@ -25,7 +59,7 @@ export default function JobExperience() {
 
           <div className="flex flex-col gap-8">
             {jobs.map((job, index) => (
-              <div key={`${job.role}-${index}`} className="job-timeline-item relative pl-20 md:pl-28">
+              <div key={`${job.role}-${job.startDate}-${index}`} className="job-timeline-item relative pl-20 md:pl-28">
                 <span className="job-marker">{String(index + 1).padStart(2, '0')}</span>
 
                 <TiltCard maxTilt={6} className="h-full">
@@ -38,12 +72,19 @@ export default function JobExperience() {
                   >
                     <div className="flex flex-wrap items-start justify-between gap-4">
                       <div>
-                        <h3 className="text-xl font-semibold text-white md:text-2xl">{job.role}</h3>
+                        <div className="flex flex-wrap items-center gap-3">
+                          <h3 className="text-xl font-semibold text-white md:text-2xl">{job.role}</h3>
+                          {job.current ? (
+                            <span className="job-current-badge">
+                              <span className="job-current-dot" aria-hidden="true" /> Currently working
+                            </span>
+                          ) : null}
+                        </div>
                         <p className="mt-1 flex items-center gap-2 font-medium text-cyan-200/90">
                           <FiBriefcase /> {job.company}
                         </p>
                       </div>
-                      <span className="job-chip">{job.timeline}</span>
+                      <span className="job-chip">{formatRange(job)}</span>
                     </div>
 
                     {job.location ? (
@@ -66,7 +107,7 @@ export default function JobExperience() {
                     ) : null}
 
                     <div className="mt-5 flex items-center gap-2 border-t border-white/10 pt-4 text-xs uppercase tracking-[0.25em] text-slate-500">
-                      <FiCalendar size={13} /> {job.timeline}
+                      <FiCalendar size={13} /> {formatRange(job)}
                     </div>
                   </motion.article>
                 </TiltCard>
