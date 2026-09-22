@@ -5,7 +5,7 @@ import { getIcon } from '../lib/icons';
 
 export default function Navbar({ mobileOpen, setMobileOpen }) {
   const content = useContent();
-  const quickLinks = content?.quickLinks || [];
+  const navSections = (content?.sections || []).filter((section) => section.enabled);
   const socialLinks = content?.socialLinks || [];
 
   return (
@@ -22,9 +22,9 @@ export default function Navbar({ mobileOpen, setMobileOpen }) {
         </a>
 
         <nav className="hidden items-center gap-6 lg:flex">
-          {quickLinks.map((link) => (
-            <a key={link.label} href={link.href} className="text-sm text-slate-300 transition hover:text-white">
-              {link.label}
+          {navSections.map((section) => (
+            <a key={section.id} href={`#${section.id}`} className="text-sm text-slate-300 transition hover:text-white">
+              {section.label}
             </a>
           ))}
         </nav>
@@ -61,9 +61,9 @@ export default function Navbar({ mobileOpen, setMobileOpen }) {
           className="border-t border-white/5 bg-slate-950/90 lg:hidden"
         >
           <div className="container flex flex-col gap-4 py-5">
-            {quickLinks.map((link) => (
-              <a key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-sm text-slate-300 transition hover:text-white">
-                {link.label}
+            {navSections.map((section) => (
+              <a key={section.id} href={`#${section.id}`} onClick={() => setMobileOpen(false)} className="text-sm text-slate-300 transition hover:text-white">
+                {section.label}
               </a>
             ))}
             <a href="/admin" onClick={() => setMobileOpen(false)} className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-white/5 px-4 py-2 text-sm text-cyan-100 transition hover:border-cyan-300/40 hover:text-white">

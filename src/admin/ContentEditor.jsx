@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { FiEdit2, FiImage, FiLoader, FiPlus, FiSave, FiTrash2, FiUpload, FiX } from 'react-icons/fi';
+import { FiEdit2, FiImage, FiLoader, FiMenu, FiPlus, FiSave, FiTrash2, FiUpload, FiX } from 'react-icons/fi';
 import { fetchSiteContent, saveSiteContent } from '../lib/content';
 import { deleteImage, uploadImage, uploadNewImage } from '../lib/uploads';
 import { createProject, deleteProject, fetchProjects, removeProjectImage, updateProject } from '../lib/projects';
@@ -11,6 +11,7 @@ import { Button, Field, TextArea, TextInput } from './ui';
 const TABS = [
   'Profile',
   'Hero',
+  'Sections',
   'Job Experience',
   'About',
   'Skills',
@@ -373,6 +374,239 @@ function ProjectsEditor({ content, update }) {
   );
 }
 
+function SectionsEditor({ content, update }) {
+  const [dragIndex, setDragIndex] = useState(null);
+  const [dropIndex, setDropIndex] = useState(null);
+
+  function reorder(from, to) {
+    if (from === to) return;
+    update((c) => {
+      const [moved] = c.sections.splice(from, 1);
+      c.sections.splice(to, 0, moved);
+    });
+  }
+
+  function handleDrop(to) {
+    if (dragIndex !== null) reorder(dragIndex, to);
+    setDragIndex(null);
+    setDropIndex(null);
+  }
+
+  function toggle(section) {
+    update((c) => {
+      const target = c.sections.find((item) => item.id === section.id);
+      if (target) target.enabled = !target.enabled;
+    });
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      <p className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-400">
+        This controls the portfolio <span className="text-slate-200">navbar order</span> and the{' '}
+        <span className="text-slate-200">section order on the homepage</span>. Drag a row to move it and toggle a
+        section ON or OFF to show or hide it.
+      </p>
+
+      <div className="flex flex-col gap-3">
+        {content.sections.map((section, index) => (
+          <div
+            key={section.id}
+            draggable
+            onDragStart={() => {
+              setDragIndex(index);
+              setDropIndex(index);
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              if (dropIndex !== index) setDropIndex(index);
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              handleDrop(index);
+            }}
+            onDragEnd={() => {
+              setDragIndex(null);
+              setDropIndex(null);
+            }}
+            className={`cursor-grab transition active:cursor-grabbing ${
+              dragIndex === index ? 'opacity-60' : ''
+            } ${dropIndex === index && dragIndex !== null && dragIndex !== index ? 'droppable-active' : ''}`}
+          >
+            <div className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-4">
+              <FiMenu className="text-slate-500" />
+              <span className="text-xs text-slate-600">{String(index + 1).padStart(2, '0')}</span>
+              <span className="flex-1 text-sm font-medium text-slate-200">{section.label}</span>
+              <button
+                type="button"
+                onClick={() => toggle(section)}
+                className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold transition ${
+                  section.enabled
+                    ? 'border border-cyan-400/25 bg-cyan-400/10 text-cyan-200 hover:bg-cyan-400/20'
+                    : 'border border-white/10 bg-white/5 text-slate-500 hover:text-slate-300'
+                }`}
+              >
+                <span className={`h-2 w-2 rounded-full ${section.enabled ? 'bg-cyan-300' : 'bg-slate-600'}`} />
+                {section.enabled ? 'ON' : 'OFF'}
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <p className="text-xs leading-5 text-slate-500">
+        Disabled sections disappear from both the navbar and the homepage. Changes are saved with the rest of your
+        content.
+      </p>
+    </div>
+  );
+}
+
+function JobExperienceEditor({ content, update }) {
+  const [dragIndex, setDragIndex] = useState(null);
+  const [dropIndex, setDropIndex] = useState(null);
+
+  function reorder(from, to) {
+    if (from === to) return;
+    update((c) => {
+      const [moved] = c.jobExperience.splice(from, 1);
+      c.jobExperience.splice(to, 0, moved);
+    });
+  }
+
+  function handleDrop(to) {
+    if (dragIndex !== null) reorder(dragIndex, to);
+    setDragIndex(null);
+    setDropIndex(null);
+  }
+
+  return (
+    <div className="flex flex-col gap-5">
+      <Field label="Section eyebrow">
+        <TextInput
+          value={content.jobExperienceSection.eyebrow}
+          onChange={(e) => update((c) => { c.jobExperienceSection.eyebrow = e.target.value; })}
+        />
+      </Field>
+      <Field label="Section heading">
+        <TextInput
+          value={content.jobExperienceSection.title}
+          onChange={(e) => update((c) => { c.jobExperienceSection.title = e.target.value; })}
+        />
+      </Field>
+      <Field label="Section subtitle">
+        <TextArea
+          value={content.jobExperienceSection.subtitle}
+          onChange={(e) => update((c) => { c.jobExperienceSection.subtitle = e.target.value; })}
+        />
+      </Field>
+
+      <div className="border-t border-white/10 pt-5">
+        <div className="mb-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-slate-300">Jobs</p>
+            <p className="mt-1 text-xs text-slate-500">
+              Drag a card to reorder. Note: the portfolio sorts by date — the most recent job always appears first.
+            </p>
+          </div>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={() => update((c) => { c.jobExperience.push({ role: '', company: '', startDate: '', endDate: '', current: false, location: '', highlights: [] }); })}
+          >
+            <FiPlus /> Add job
+          </Button>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          {content.jobExperience.map((item, index) => (
+            <div
+              key={index}
+              draggable
+              onDragStart={() => {
+                setDragIndex(index);
+                setDropIndex(index);
+              }}
+              onDragOver={(e) => {
+                e.preventDefault();
+                if (dropIndex !== index) setDropIndex(index);
+              }}
+              onDrop={(e) => {
+                e.preventDefault();
+                handleDrop(index);
+              }}
+              onDragEnd={() => {
+                setDragIndex(null);
+                setDropIndex(null);
+              }}
+              className={`cursor-grab transition active:cursor-grabbing ${
+                dragIndex === index ? 'opacity-60' : ''
+              } ${dropIndex === index && dragIndex !== null && dragIndex !== index ? 'droppable-active' : ''}`}
+            >
+              <CardEditor
+                label={`Job ${index + 1}`}
+                onRemove={() => update((c) => { c.jobExperience.splice(index, 1); })}
+              >
+                <div className="-mt-1 mb-1 flex items-center gap-2 text-xs text-slate-500">
+                  <FiMenu /> Hold and drag to reorder
+                </div>
+                <TextInput
+                  value={item.role}
+                  placeholder="Role"
+                  onChange={(e) => update((c) => { c.jobExperience[index].role = e.target.value; })}
+                />
+                <TextInput
+                  value={item.company}
+                  placeholder="Company / organization"
+                  onChange={(e) => update((c) => { c.jobExperience[index].company = e.target.value; })}
+                />
+                <div className="grid gap-3 sm:grid-cols-2">
+                  <Field label="From (start date)">
+                    <TextInput
+                      type="date"
+                      value={item.startDate || ''}
+                      onChange={(e) => update((c) => { c.jobExperience[index].startDate = e.target.value; })}
+                    />
+                  </Field>
+                  <Field label="To (end date)">
+                    <TextInput
+                      type="date"
+                      value={item.current ? '' : (item.endDate || '')}
+                      placeholder={item.current ? 'Present' : 'To'}
+                      disabled={item.current}
+                      onChange={(e) => update((c) => { c.jobExperience[index].endDate = e.target.value; })}
+                    />
+                  </Field>
+                </div>
+                <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
+                  <input
+                    type="checkbox"
+                    className="h-4 w-4 rounded accent-emerald-400"
+                    checked={Boolean(item.current)}
+                    onChange={(e) => update((c) => { c.jobExperience[index].current = e.target.checked; })}
+                  />
+                  <span className="text-sm text-slate-200">I am currently working here</span>
+                </label>
+                <Field label="Location">
+                  <TextInput
+                    value={item.location}
+                    placeholder="Location (e.g. Remote · Bangladesh)"
+                    onChange={(e) => update((c) => { c.jobExperience[index].location = e.target.value; })}
+                  />
+                </Field>
+                <LinesEditor
+                  label="Highlights (one per line)"
+                  lines={item.highlights || []}
+                  onChange={(lines) => update((c) => { c.jobExperience[index].highlights = lines; })}
+                />
+              </CardEditor>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function ContentEditor() {
   const [content, setContent] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -516,94 +750,20 @@ export default function ContentEditor() {
           </div>
         );
 
+      case 'Sections':
+        return (
+          <SectionsEditor
+            content={content}
+            update={update}
+          />
+        );
+
       case 'Job Experience':
         return (
-          <div className="flex flex-col gap-5">
-            <Field label="Section eyebrow">
-              <TextInput
-                value={content.jobExperienceSection.eyebrow}
-                onChange={(e) => update((c) => { c.jobExperienceSection.eyebrow = e.target.value; })}
-              />
-            </Field>
-            <Field label="Section heading">
-              <TextInput
-                value={content.jobExperienceSection.title}
-                onChange={(e) => update((c) => { c.jobExperienceSection.title = e.target.value; })}
-              />
-            </Field>
-            <Field label="Section subtitle">
-              <TextArea
-                value={content.jobExperienceSection.subtitle}
-                onChange={(e) => update((c) => { c.jobExperienceSection.subtitle = e.target.value; })}
-              />
-            </Field>
-
-            <div className="border-t border-white/10 pt-5">
-              {content.jobExperience.map((item, index) => (
-                <CardEditor
-                  key={index}
-                  label={`Job ${index + 1}`}
-                  onRemove={() => update((c) => { c.jobExperience.splice(index, 1); })}
-                >
-                  <TextInput
-                    value={item.role}
-                    placeholder="Role"
-                    onChange={(e) => update((c) => { c.jobExperience[index].role = e.target.value; })}
-                  />
-                  <TextInput
-                    value={item.company}
-                    placeholder="Company / organization"
-                    onChange={(e) => update((c) => { c.jobExperience[index].company = e.target.value; })}
-                  />
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    <Field label="From (start date)" hint="e.g. 12 March 2024">
-                      <TextInput
-                        value={item.startDate || ''}
-                        placeholder="From"
-                        onChange={(e) => update((c) => { c.jobExperience[index].startDate = e.target.value; })}
-                      />
-                    </Field>
-                    <Field label="To (end date)" hint="e.g. 5 June 2025">
-                      <TextInput
-                        value={item.current ? '' : (item.endDate || '')}
-                        placeholder={item.current ? 'Present' : 'To'}
-                        disabled={item.current}
-                        onChange={(e) => update((c) => { c.jobExperience[index].endDate = e.target.value; })}
-                      />
-                    </Field>
-                  </div>
-                  <label className="flex cursor-pointer items-center gap-3 rounded-xl border border-white/10 bg-white/5 px-4 py-3">
-                    <input
-                      type="checkbox"
-                      className="h-4 w-4 rounded accent-emerald-400"
-                      checked={Boolean(item.current)}
-                      onChange={(e) => update((c) => { c.jobExperience[index].current = e.target.checked; })}
-                    />
-                    <span className="text-sm text-slate-200">I am currently working here</span>
-                  </label>
-                  <Field label="Location">
-                    <TextInput
-                      value={item.location}
-                      placeholder="Location (e.g. Remote · Bangladesh)"
-                      onChange={(e) => update((c) => { c.jobExperience[index].location = e.target.value; })}
-                    />
-                  </Field>
-                  <LinesEditor
-                    label="Highlights (one per line)"
-                    lines={item.highlights || []}
-                    onChange={(lines) => update((c) => { c.jobExperience[index].highlights = lines; })}
-                  />
-                </CardEditor>
-              ))}
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => update((c) => { c.jobExperience.push({ role: '', company: '', startDate: '', endDate: '', current: false, location: '', highlights: [] }); })}
-              >
-                <FiPlus /> Add job
-              </Button>
-            </div>
-          </div>
+          <JobExperienceEditor
+            content={content}
+            update={update}
+          />
         );
 
       case 'About':
@@ -948,36 +1108,14 @@ export default function ContentEditor() {
             </div>
 
             <div className="border-t border-white/10 pt-5">
-              <p className="mb-3 text-sm font-medium text-slate-300">Navigation links</p>
-              {content.quickLinks.map((link, index) => (
-                <div key={index} className="mb-3 flex items-center gap-2">
-                  <TextInput
-                    value={link.label}
-                    placeholder="Label"
-                    onChange={(e) => update((c) => { c.quickLinks[index].label = e.target.value; })}
-                  />
-                  <TextInput
-                    value={link.href}
-                    placeholder="#about"
-                    onChange={(e) => update((c) => { c.quickLinks[index].href = e.target.value; })}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => update((c) => { c.quickLinks.splice(index, 1); })}
-                    className="flex h-9 w-9 flex-none items-center justify-center rounded-full border border-red-400/20 bg-red-500/10 text-red-300 transition hover:bg-red-500/20"
-                    aria-label="Remove link"
-                  >
-                    <FiX size={14} />
-                  </button>
-                </div>
-              ))}
-              <Button
-                type="button"
-                variant="secondary"
-                onClick={() => update((c) => { c.quickLinks.push({ label: '', href: '' }); })}
-              >
-                <FiPlus /> Add navigation link
-              </Button>
+              <p className="mb-3 text-sm font-medium text-slate-300">Navigation</p>
+              <p className="text-sm text-slate-400">
+                Navbar order and visible sections are managed on the{' '}
+                <button type="button" onClick={() => setActiveTab('Sections')} className="font-semibold text-cyan-200 underline underline-offset-4 transition hover:text-cyan-100">
+                  Sections
+                </button>{' '}
+                tab.
+              </p>
             </div>
           </div>
         );

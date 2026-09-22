@@ -188,7 +188,7 @@ export const DEFAULT_CONTENT = {
     {
       role: 'Browser Extension Developer',
       company: 'Independent Projects',
-      startDate: 'June 2024',
+      startDate: '2024-06-01',
       endDate: '',
       current: true,
       location: 'Remote',
@@ -200,8 +200,8 @@ export const DEFAULT_CONTENT = {
     {
       role: 'AI & Web Automation Freelancer',
       company: 'Independent / Remote',
-      startDate: 'March 2024',
-      endDate: 'May 2025',
+      startDate: '2024-03-01',
+      endDate: '2025-05-31',
       current: false,
       location: 'Remote · Bangladesh',
       highlights: [
@@ -213,8 +213,8 @@ export const DEFAULT_CONTENT = {
     {
       role: 'Student Associate',
       company: 'Creative International (Daffodil Group)',
-      startDate: 'January 2023',
-      endDate: 'December 2025',
+      startDate: '2023-01-01',
+      endDate: '2025-12-31',
       current: false,
       location: 'Dhaka, Bangladesh',
       highlights: [
@@ -255,11 +255,15 @@ export const DEFAULT_CONTENT = {
     { label: 'Portfolio', href: '#hero', icon: 'FaGlobe' },
   ],
 
-  quickLinks: [
-    { label: 'About', href: '#about' },
-    { label: 'Skills', href: '#skills' },
-    { label: 'Projects', href: '#projects' },
-    { label: 'Contact', href: '#contact' },
+  sections: [
+    { id: 'job-experience', label: 'Job Experience', enabled: true },
+    { id: 'experience', label: 'Professional Experience', enabled: true },
+    { id: 'about', label: 'About', enabled: true },
+    { id: 'skills', label: 'Skills', enabled: true },
+    { id: 'education', label: 'Education', enabled: true },
+    { id: 'research', label: 'Research', enabled: true },
+    { id: 'projects', label: 'Projects', enabled: true },
+    { id: 'contact', label: 'Contact', enabled: true },
   ],
 
   footer: {

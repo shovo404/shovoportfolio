@@ -1,20 +1,31 @@
-import { lazy, Suspense, useEffect, useState } from 'react';
+import { Fragment, lazy, Suspense, useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import AnimatedCounters from './components/AnimatedCounters';
 import JobExperience from './components/JobExperience';
+import Experience from './components/Experience';
 import About from './components/About';
 import Skills from './components/Skills';
 import EducationTimeline from './components/EducationTimeline';
 import Research from './components/Research';
 import Projects from './components/Projects';
-import Experience from './components/Experience';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import { ContentProvider } from './context/ContentContext';
+import { ContentProvider, useContent } from './context/ContentContext';
 
 const AdminPage = lazy(() => import('./admin/AdminPage'));
+
+const SECTION_COMPONENTS = {
+  'job-experience': <JobExperience />,
+  experience: <Experience />,
+  about: <About />,
+  skills: <Skills />,
+  education: <EducationTimeline />,
+  research: <Research />,
+  projects: <Projects />,
+  contact: <Contact />,
+};
 
 function AdminFallback() {
   return (
@@ -25,7 +36,12 @@ function AdminFallback() {
 }
 
 function PortfolioPage() {
+  const content = useContent();
   const [mobileOpen, setMobileOpen] = useState(false);
+
+  const enabledSections = (content?.sections || []).filter(
+    (section) => section.enabled && SECTION_COMPONENTS[section.id],
+  );
 
   useEffect(() => {
     document.title = 'Shahriar Ahmed Shovo | AI Developer Portfolio';
@@ -53,14 +69,9 @@ function PortfolioPage() {
       <main>
         <Hero />
         <AnimatedCounters />
-        <JobExperience />
-        <Experience />
-        <About />
-        <Skills />
-        <EducationTimeline />
-        <Research />
-        <Projects />
-        <Contact />
+        {enabledSections.map((section) => (
+          <Fragment key={section.id}>{SECTION_COMPONENTS[section.id]}</Fragment>
+        ))}
       </main>
 
       <Footer />

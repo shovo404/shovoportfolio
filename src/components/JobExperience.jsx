@@ -5,6 +5,17 @@ import { useContent } from '../context/ContentContext';
 import TiltCard from './TiltCard';
 
 const MONTHS = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
+const MONTH_NAMES = [
+  'January', 'February', 'March', 'April', 'May', 'June',
+  'July', 'August', 'September', 'October', 'November', 'December',
+];
+
+function formatDate(value) {
+  if (!value) return '';
+  const match = value.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!match) return value;
+  return `${Number(match[3])} ${MONTH_NAMES[Number(match[2]) - 1]} ${match[1]}`;
+}
 
 function dateValue(value) {
   if (!value) return 0;
@@ -31,10 +42,13 @@ function sortJobs(jobs) {
 }
 
 function formatRange(job) {
-  if (job.current) return `${job.startDate || '—'} — Present`;
-  if (job.startDate && job.endDate) return `${job.startDate} — ${job.endDate}`;
-  if (job.startDate) return job.startDate;
-  if (job.endDate) return job.endDate;
+  const start = formatDate(job.startDate);
+  const end = formatDate(job.endDate);
+
+  if (job.current) return `${start || '—'} — Present`;
+  if (start && end) return `${start} — ${end}`;
+  if (start) return start;
+  if (end) return end;
   return job.timeline || '';
 }
 

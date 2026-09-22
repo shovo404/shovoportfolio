@@ -352,6 +352,13 @@ textarea {
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02));
   backdrop-filter: blur(24px);
   box-shadow: 0 30px 80px rgba(0, 0, 0, 0.3);
+  color-scheme: dark;
+}
+
+.droppable-active {
+  outline: 2px dashed rgba(34, 211, 238, 0.55);
+  outline-offset: 4px;
+  border-radius: 24px;
 }
 
 .neon-button {
