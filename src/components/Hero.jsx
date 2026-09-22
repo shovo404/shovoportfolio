@@ -96,7 +96,7 @@ export default function Hero() {
               <a href="#projects" className="neon-button secondary-button">
                 View Projects <FiArrowRight />
               </a>
-              <button type="button" onClick={() => downloadResume(profile?.name || 'resume')} className="neon-button secondary-button">
+              <button type="button" onClick={() => downloadResume(content)} className="neon-button secondary-button">
                 Download CV <FiDownload />
               </button>
             </div>
