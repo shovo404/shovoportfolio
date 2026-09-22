@@ -103,7 +103,26 @@ export default function Projects() {
 }
 
 function ProjectCard({ project, index, fallback = false }) {
-  const showFallbackButtons = fallback || (!project.github_url && !project.live_url);
+  const githubUrl = project.github_url;
+  const liveUrl = project.live_url;
+  const primaryUrl = liveUrl || githubUrl;
+  const clickable = Boolean(primaryUrl);
+
+  const showFallbackButtons = fallback || (!githubUrl && !liveUrl);
+
+  function openProject(event) {
+    if (!primaryUrl) return;
+    event?.stopPropagation();
+    window.open(primaryUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  function handleKeyDown(event) {
+    if (!primaryUrl) return;
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      openProject();
+    }
+  }
 
   return (
     <TiltCard maxTilt={6} className="h-full">
@@ -112,7 +131,12 @@ function ProjectCard({ project, index, fallback = false }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, amount: 0.2 }}
         transition={{ duration: 0.7, delay: index * 0.08 }}
-        className="project-glow glass card-hover rounded-[28px] p-5 h-full"
+        onClick={clickable ? openProject : undefined}
+        onKeyDown={handleKeyDown}
+        role={clickable ? 'link' : undefined}
+        tabIndex={clickable ? 0 : undefined}
+        title={clickable ? (liveUrl ? 'Open live site' : 'Open GitHub') : undefined}
+        className={`project-glow glass card-hover rounded-[28px] p-5 h-full${clickable ? ' cursor-pointer' : ''}`}
       >
       <ProjectPreview project={project} index={index} />
       <h3 className="mt-5 text-2xl font-semibold text-white">{project.title}</h3>
@@ -130,14 +154,27 @@ function ProjectCard({ project, index, fallback = false }) {
 
       {showFallbackButtons ? (
         <div className="mt-6 flex flex-wrap gap-3">
-          <a href={project.github_url || '#contact'} target={project.github_url ? '_blank' : undefined} rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-300/30 hover:text-white">
+          <a href={githubUrl || '#contact'} target={githubUrl ? '_blank' : undefined} rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-300/30 hover:text-white">
             <FiGithub /> GitHub <FiArrowUpRight />
           </a>
-          <a href={project.live_url || '#contact'} target={project.live_url ? '_blank' : undefined} rel="noreferrer" className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-300/30 hover:text-white">
+          <a href={liveUrl || '#contact'} target={liveUrl ? '_blank' : undefined} rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-300/30 hover:text-white">
             <FiPlayCircle /> Live Demo <FiArrowUpRight />
           </a>
         </div>
-      ) : null}
+      ) : (
+        <div className="mt-6 flex flex-wrap gap-3">
+          {githubUrl ? (
+            <a href={githubUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-300/30 hover:text-white">
+              <FiGithub /> GitHub <FiArrowUpRight />
+            </a>
+          ) : null}
+          {liveUrl ? (
+            <a href={liveUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-slate-200 transition hover:border-cyan-300/30 hover:text-white">
+              <FiPlayCircle /> Live Demo <FiArrowUpRight />
+            </a>
+          ) : null}
+        </div>
+      )}
       </motion.article>
     </TiltCard>
   );
